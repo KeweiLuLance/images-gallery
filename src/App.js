@@ -4,6 +4,7 @@ import { useState } from "react";
 import NavigationHeader from "./components/layout/Navigation";
 import Search from "./components/Search";
 
+const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_KEY;
 const App = () => {
   const [searchInput, setSearchInput] = useState("");
 
@@ -11,8 +12,16 @@ const App = () => {
     e.preventDefault();
     console.log(searchInput);
   };
-
-  console.log(searchInput)
+  fetch(
+    `https://api.unsplash.com/photos/random/?query=${searchInput}&client_id=${UNSPLASH_KEY}`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   return (
     <div className="App">
