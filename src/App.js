@@ -11,17 +11,20 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(searchInput);
+
+    fetch(
+      `https://api.unsplash.com/photos/random/?query=${searchInput}&client_id=${UNSPLASH_KEY}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setSearchInput("");
   };
-  fetch(
-    `https://api.unsplash.com/photos/random/?query=${searchInput}&client_id=${UNSPLASH_KEY}`
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 
   return (
     <div className="App">
