@@ -1,6 +1,8 @@
 # misc
 .DS_Store
-
+.env.local
+*venv*
+__pycache__
 # vscode config
 /.vscode
 
