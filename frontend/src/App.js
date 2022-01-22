@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import ImageCard from './components/layout/ImageCard';
-
+import axios from 'axios';
 import NavigationHeader from './components/layout/Navigation';
 import Search from './components/Search';
 
@@ -13,19 +13,24 @@ const App = () => {
   const [searchInput, setSearchInput] = useState('');
   const [images, setImages] = useState([]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(searchInput);
 
-    fetch(`${API_URL}/new-image?query=${searchInput}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setImages([{ ...data, title: searchInput }, ...images]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
+    // fetch(`${API_URL}/new-image?query=${searchInput}`)
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log('adding found image to the state');
+    //     setImages([{ ...data, title: searchInput }, ...images]);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    // });
+    try {
+      const res = await axios.get(`${API_URL}/new-image?query=${searchInput}`);
+      setImages([{ ...res.data, title: searchInput }, ...images]);
+    } catch (error) {
+      console.log(error);
+    }
     setSearchInput('');
   };
 
