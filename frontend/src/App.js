@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ImageCard from './components/layout/ImageCard';
 import axios from 'axios';
 import NavigationHeader from './components/layout/Navigation';
@@ -13,6 +13,16 @@ const App = () => {
   const [searchInput, setSearchInput] = useState('');
   const [images, setImages] = useState([]);
 
+  const getSavedImages = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/images`);
+      setImages(res.data || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => getSavedImages(), []);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
