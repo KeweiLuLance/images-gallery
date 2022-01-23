@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect } from 'react';
 import ImageCard from './components/layout/ImageCard';
 import axios from 'axios';
@@ -6,6 +7,7 @@ import NavigationHeader from './components/layout/Navigation';
 import Search from './components/Search';
 
 import { Container, Row, Col } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
 import Welcome from './components/Welcome';
 
 import Spinner from './components/utils/Spinner';
@@ -21,6 +23,7 @@ const App = () => {
       const res = await axios.get(`${API_URL}/images`);
       setImages(res.data || []);
       setLoading(false);
+      toast.success('Saved images downloaded');
     } catch (error) {
       console.log(error);
     }
@@ -43,8 +46,10 @@ const App = () => {
     try {
       const res = await axios.get(`${API_URL}/new-image?query=${searchInput}`);
       setImages([{ ...res.data, title: searchInput }, ...images]);
+      toast.info(`New Image ${searchInput.toUpperCase()} was found`);
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
     }
     setSearchInput('');
   };
@@ -54,11 +59,17 @@ const App = () => {
     try {
       const res = await axios.delete(`${API_URL}/images/${id}`);
       if (res.data?.deleted_id) {
+        toast.warn(
+          `Image ${images
+            .find((i) => i.id === id)
+            .title.toUpperCase()} was deleted`
+        );
         setImages(images.filter((image) => image.id !== id));
       }
       console.log(res);
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -73,9 +84,11 @@ const App = () => {
             image.id === id ? { ...image, saved: true } : image
           )
         );
+        toast.info(`Image ${imageToBeSaved.title} was saved`);
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -111,6 +124,7 @@ const App = () => {
           </Container>
         </>
       )}
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };
